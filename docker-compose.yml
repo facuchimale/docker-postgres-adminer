@@ -2,23 +2,34 @@
 # POSTGRES_USER: gonzalezj       --->>> su apellido más la primera letra de su nombre
 # POSTGRES_PASSWORD: Jesus556    --->>> una clave que ud. elija
 # POSTGRES_DB: Prueba            --->>> la Base de Datos deberá tener el nombre de Prueba 
-
-version: '1.1'
-
 services:
-
-  db:
-    image: postgres
+  mysql_container:
+    image: mysql:5.7
+    container_name: mysql_container
     restart: always
-    ports:
-      - "5432:5432"
     environment:
-      POSTGRES_USER: gonzalezj
-      POSTGRES_PASSWORD: Jesus556
-      POSTGRES_DB: Prueba
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: Emma15
+      MYSQL_PASSWORD: emmapass
+    ports:
+      - "3306:3306"
+    networks:
+      - appnet
 
-  adminer:
-    image: adminer
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_container
     restart: always
     ports:
-      - 8080:8080
+      - "8086:80"
+    environment:
+      PMA_HOST: mysql_container
+      PMA_USER: Emma15
+      PMA_PASSWORD: emmapass
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
